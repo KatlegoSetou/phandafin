@@ -1,15 +1,12 @@
+![PhandaFin Icon](artwork/pflogo-icononly.png)
+
 # PhandaFin
 
-The FREE Finance Tool For The Largely Underserved Informal/Small Business Setor In South Africa That Aims To Address Funding And Financial Exclusion Through Accessible, Easy-To-Use and Tailored Financial Record-Keeping.
+The FREE Finance Tool For The Largely Underserved Informal-Micro-Small South African Business Sector That Aims To Address Funding And Financial Management Exclusion Through Accessible, Easy-To-Use and Tailored Financial Record-Keeping.
 
-### Every sale counts. Every business matters.
+We believe every business deserves access to simple, affordable financial tools — regardless of its size, resources or technical experience. 
 
-**Making financial recordkeeping accessible. Making financial futures possible.**
-
-PhandaFin is a financial management web application designed to help informal traders, micro-enterprises and small businesses in South Africa digitise their transactions, simplify invoicing and build reliable financial histories.
-
-We believe every business deserves access to simple, affordable financial tools — regardless of its size, resources or technical experience.
-
+### Proudly South African
 ## The Problem
 
 Many small businesses still rely on handwritten notebooks, memory or inconsistent recordkeeping to manage their finances.
