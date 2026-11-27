@@ -139,9 +139,9 @@ function renderInvoice() {
 
     invoiceItems.forEach((item, index) => {
         const lineTotal = item.price * item.quantity;
-        subtotal += lineTotal; 
+        subtotal += lineTotal;
 
-        const row = document.createElement("tr"); 
+        const row = document.createElement("tr");
         row.innerHTML = `
             <td>${item.name}</td> 
             <td>${item.quantity}</td> 
@@ -150,23 +150,44 @@ function renderInvoice() {
             <td class="no-print"> 
                 <button class="remove-btn" data-index="${index}">Remove</button> 
             </td> 
-            `; 
-            itemsBody.appendChild(row);
-    }); 
-    
+            `;
+        itemsBody.appendChild(row);
+    });
+
     // Totals 
     const delivery = deliveryCheckbox.checked ? Number(settings.delivery_fee) : 0;
-    const vatRate = Number(settings.vat_rate); 
-    const vatAmount = (subtotal + delivery) * vatRate; 
-    const total = subtotal + delivery + vatAmount; 
-    
-    subtotalText.textContent = formatMoney(subtotal); 
-    deliveryText.textContent = formatMoney(delivery); 
-    vatPercentText.textContent = (vatRate * 100).toFixed(0); 
-    vatAmountText.textContent = formatMoney(vatAmount); 
+    const vatRate = Number(settings.vat_rate);
+    const vatAmount = (subtotal + delivery) * vatRate;
+    const total = subtotal + delivery + vatAmount;
+
+    subtotalText.textContent = formatMoney(subtotal);
+    deliveryText.textContent = formatMoney(delivery);
+    vatPercentText.textContent = (vatRate * 100).toFixed(0);
+    vatAmountText.textContent = formatMoney(vatAmount);
     grandTotalText.textContent = formatMoney(total);
 }
 
+// ===== F. Invoice number, date and reset =====
+function setInvoiceMeta() {
+    const now = new Date();
+
+    // Example result: INV-20261109-1430 
+    const datePart = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate()); const timePart = pad(now.getHours()) + pad(now.getMinutes()); 
+    
+    invoiceNumber.textContent = "INV-" + datePart + "-" + timePart; 
+    invoiceDate.textContent = now.toLocaleDateString("en-ZA");
+} 
+
+function newInvoice() { 
+    invoiceItems = []; 
+    customerInput.value = ""; 
+    invoiceCustomer.textContent = "—"; 
+    deliveryCheckbox.checked = false; 
+    quantityInput.value = 1; 
+    messageText.textContent = ""; 
+    setInvoiceMeta(); 
+    renderInvoice(); 
+}
 
 // ===== G. Event listeners =====
 addItemBtn.addEventListener("click", addItem);
@@ -174,11 +195,19 @@ deliveryCheckbox.addEventListener("change", renderInvoice);
 
 // One listener on the table body handles every Remove button
 itemsBody.addEventListener("click", function (event) {
-    if (event.target.classList.contains("remove-btn")) { 
-        const index = Number(event.target.dataset.index); 
-        removeItem(index); 
+    if (event.target.classList.contains("remove-btn")) {
+        const index = Number(event.target.dataset.index);
+        removeItem(index);
     }
 });
 
+// Show the customer name on the invoice as the user types
+customerInput.addEventListener("input", function () { 
+    invoiceCustomer.textContent = customerInput.value.trim() || "—";
+});
+
+newInvoiceBtn.addEventListener("click", newInvoice);
+
 // ===== H. Start-up (keep this at the very bottom) =====
+setInvoiceMeta();
 loadData();
