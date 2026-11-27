@@ -75,27 +75,110 @@ async function loadData() {
 
         applySettings();
         fillProductDropdown();
+        renderInvoice();
     } catch (error) {
         messageText.textContent = "Could not load data files. Are you using Live Server? (" + error.message + ")";
     }
 }
 
 function applySettings() {
-    businessNameHeading.textContent = settings.business_name; 
-    invoiceBusinessName.textContent = settings.business_name; 
+    businessNameHeading.textContent = settings.business_name;
+    invoiceBusinessName.textContent = settings.business_name;
     invoiceBusinessAddress.textContent = settings.business_address;
-    invoiceBusinessPhone.textContent = settings.business_phone; 
+    invoiceBusinessPhone.textContent = settings.business_phone;
     document.title = settings.business_name + " Invoice Generator";
-} 
+}
 
-function fillProductDropdown() { 
-    productSelect.innerHTML = ""; 
-    products.forEach((product, index) => { 
-        const option = document.createElement("option"); 
+function fillProductDropdown() {
+    productSelect.innerHTML = "";
+    products.forEach((product, index) => {
+        const option = document.createElement("option");
         option.value = index; // the position in the products array 
-        option.textContent = product.name + " - " + formatMoney(product.price); productSelect.appendChild(option); 
+        option.textContent = product.name + " - " + formatMoney(product.price); productSelect.appendChild(option);
     });
 }
+
+// ===== E. Invoice logic =====
+function addItem() {
+    messageText.textContent = ""; // clear old messages 
+
+    const product = products[productSelect.value];
+    const quantity = parseInt(quantityInput.value);
+
+    if (!product) {
+        messageText.textContent = "Please choose a product.";
+        return;
+    }
+    if (isNaN(quantity) || quantity < 1) {
+        messageText.textContent = "Quantity must be 1 or more.";
+        return;
+    }
+
+    invoiceItems.push({
+        name: product.name,
+        price: product.price,
+        quantity: quantity
+    });
+
+    quantityInput.value = 1;
+    renderInvoice();
+}
+
+function removeItem(index) {
+    invoiceItems.splice(index, 1);
+    renderInvoice();
+}
+
+function renderInvoice() {
+    itemsBody.innerHTML = "";
+    let subtotal = 0;
+
+    if (invoiceItems.length === 0) {
+        itemsBody.innerHTML = '<tr><td colspan="5">No items added yet.</td></tr>';
+    }
+
+    invoiceItems.forEach((item, index) => {
+        const lineTotal = item.price * item.quantity;
+        subtotal += lineTotal; 
+
+        const row = document.createElement("tr"); 
+        row.innerHTML = `
+            <td>${item.name}</td> 
+            <td>${item.quantity}</td> 
+            <td>${formatMoney(item.price)}</td> 
+            <td>${formatMoney(lineTotal)}</td> 
+            <td class="no-print"> 
+                <button class="remove-btn" data-index="${index}">Remove</button> 
+            </td> 
+            `; 
+            itemsBody.appendChild(row);
+    }); 
+    
+    // Totals 
+    const delivery = deliveryCheckbox.checked ? Number(settings.delivery_fee) : 0;
+    const vatRate = Number(settings.vat_rate); 
+    const vatAmount = (subtotal + delivery) * vatRate; 
+    const total = subtotal + delivery + vatAmount; 
+    
+    subtotalText.textContent = formatMoney(subtotal); 
+    deliveryText.textContent = formatMoney(delivery); 
+    vatPercentText.textContent = (vatRate * 100).toFixed(0); 
+    vatAmountText.textContent = formatMoney(vatAmount); 
+    grandTotalText.textContent = formatMoney(total);
+}
+
+
+// ===== G. Event listeners =====
+addItemBtn.addEventListener("click", addItem);
+deliveryCheckbox.addEventListener("change", renderInvoice);
+
+// One listener on the table body handles every Remove button
+itemsBody.addEventListener("click", function (event) {
+    if (event.target.classList.contains("remove-btn")) { 
+        const index = Number(event.target.dataset.index); 
+        removeItem(index); 
+    }
+});
 
 // ===== H. Start-up (keep this at the very bottom) =====
 loadData();
