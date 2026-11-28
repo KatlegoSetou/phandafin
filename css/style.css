@@ -144,3 +144,24 @@ th {
     font-size: 1.25rem;
     font-weight: bold;
 }
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .no-print {
+        display: none;
+    }
+
+    main {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        border: none;
+        padding: 0;
+    }
+}
