@@ -15,7 +15,8 @@ const messageText = document.getElementById("message");
 const printBtn = document.getElementById("print-btn");
 
 const invoiceBusinessName = document.getElementById("invoice-business-name");
-const invoiceBusinessAddress = document.getElementById("invoice-business-address"); const invoiceBusinessPhone = document.getElementById("invoice-business-phone");
+const invoiceBusinessAddress = document.getElementById("invoice-business-address"); 
+const invoiceBusinessPhone = document.getElementById("invoice-business-phone");
 const invoiceNumber = document.getElementById("invoice-number");
 const invoiceDate = document.getElementById("invoice-date");
 const invoiceCustomer = document.getElementById("invoice-customer");
@@ -54,7 +55,12 @@ function pad(number) {
 
 // ===== D. Loading data =====
 async function loadCSV(path) {
-    const response = await fetch(path, { cache: "no-store" }); if (!response.ok) { throw new Error("Could not load " + path); } const text = await response.text(); return parseCSV(text);
+    const response = await fetch(path, { cache: "no-store" }); 
+    if (!response.ok) { 
+        throw new Error("Could not load " + path); 
+    } 
+    const text = await response.text(); 
+    return parseCSV(text);
 }
 
 async function loadData() {
@@ -87,7 +93,7 @@ function applySettings() {
     invoiceBusinessName.textContent = settings.business_name;
     invoiceBusinessAddress.textContent = settings.business_address;
     invoiceBusinessPhone.textContent = settings.business_phone;
-    document.title = settings.business_name + " Invoice Generator";
+    document.title = settings.business_name + " Invoice";
 }
 
 function fillProductDropdown() {
@@ -95,7 +101,8 @@ function fillProductDropdown() {
     products.forEach((product, index) => {
         const option = document.createElement("option");
         option.value = index; // the position in the products array 
-        option.textContent = product.name + " - " + formatMoney(product.price); productSelect.appendChild(option);
+        option.textContent = product.name + " - " + formatMoney(product.price); 
+        productSelect.appendChild(option);
     });
 }
 
