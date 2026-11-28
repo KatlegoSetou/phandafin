@@ -12,6 +12,7 @@ const deliveryCheckbox = document.getElementById("delivery-checkbox");
 const addItemBtn = document.getElementById("add-item-btn");
 const newInvoiceBtn = document.getElementById("new-invoice-btn");
 const messageText = document.getElementById("message");
+const printBtn = document.getElementById("print-btn");
 
 const invoiceBusinessName = document.getElementById("invoice-business-name");
 const invoiceBusinessAddress = document.getElementById("invoice-business-address"); const invoiceBusinessPhone = document.getElementById("invoice-business-phone");
@@ -207,6 +208,10 @@ customerInput.addEventListener("input", function () {
 });
 
 newInvoiceBtn.addEventListener("click", newInvoice);
+
+printBtn.addEventListener("click", function () { 
+    window.print(); 
+});
 
 // ===== H. Start-up (keep this at the very bottom) =====
 setInvoiceMeta();
